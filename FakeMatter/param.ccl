@@ -1,0 +1,6 @@
+# Parameter definitions for thorn FakeMatter
+
+CCTK_REAL T00 "T00 component of fake matter" STEERABLE=always
+{
+  *:* :: ""
+} 0.0

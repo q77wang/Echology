@@ -1,0 +1,11 @@
+Cactus Code Thorn FakeMatter
+Author(s)    : Qingwen Wang <qwang@perimeterinstitute.ca>
+             : Erik Schnetter <eschnetter@perimeterinstitute.ca>
+Maintainer(s): Qingwen Wang <qwang@perimeterinstitute.ca>
+             : Erik Schnetter <eschnetter@perimeterinstitute.ca>
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Add matter inside a constant expansion surface.

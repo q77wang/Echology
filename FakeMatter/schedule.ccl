@@ -1,0 +1,10 @@
+# Schedule definitions for thorn FakeMatter
+
+STORAGE: smask
+
+
+
+SCHEDULE FakeMatter_AddMatter IN SetTmunu
+{
+  LANG: C
+} "Add fake matter to Tmumu"

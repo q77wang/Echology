@@ -1,0 +1,9 @@
+# Interface definition for thorn FakeMatter
+
+IMPLEMENTS: FakeMatter
+
+INHERITS: TmunuBase
+
+
+
+CCTK_REAL smask TYPE=gf "Surface mask"
