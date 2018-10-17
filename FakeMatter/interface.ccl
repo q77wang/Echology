@@ -2,6 +2,8 @@
 
 IMPLEMENTS: FakeMatter
 
+INHERITS: grid
+INHERITS: SphericalSurface
 INHERITS: TmunuBase
 
 

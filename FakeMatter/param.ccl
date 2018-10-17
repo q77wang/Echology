@@ -4,3 +4,39 @@ CCTK_REAL T00 "T00 component of fake matter" STEERABLE=always
 {
   *:* :: ""
 } 0.0
+
+
+
+SHARES: SphericalSurface
+
+USES CCTK_INT maxntheta
+USES CCTK_INT maxnphi
+
+
+
+PRIVATE:
+
+CCTK_INT horizon_index "Surface index of apparent horizon" STEERABLE=always
+{
+  0:* :: ""
+} -1
+
+CCTK_INT surface_index "Surface index of constant expansion surface" STEERABLE=always
+{
+  0:* :: ""
+} -1
+
+CCTK_REAL surface_expansion "Expansion of constant expansion surface" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+CCTK_REAL param_a "Pressure arameter a" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+CCTK_REAL param_M "Pressure arameter M" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
