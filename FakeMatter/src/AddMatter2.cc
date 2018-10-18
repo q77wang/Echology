@@ -63,12 +63,9 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
   const CCTK_REAL sc[3] = {sf_origin_x[si], sf_origin_y[si], sf_origin_z[si]};
 
   // Loop over all grid points
-  for (int k = cctk_nghostzones[2]; k < cctk_lsh[2] - cctk_nghostzones[2];
-       ++k) {
-    for (int j = cctk_nghostzones[1]; j < cctk_lsh[1] - cctk_nghostzones[1];
-         ++j) {
-      for (int i = cctk_nghostzones[0]; i < cctk_lsh[0] - cctk_nghostzones[0];
-           ++i) {
+  for (int k = 0; k < cctk_lsh[2]; ++k) {
+    for (int j = 0; j < cctk_lsh[1]; ++j) {
+      for (int i = 0; i < cctk_lsh[0]; ++i) {
         int ijk = CCTK_GFINDEX3D(cctkGH, i, j, k);
         // Are we inside the constant expansion surface?
         if (smask[ijk] > 0) {
@@ -165,7 +162,7 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
                   q[a][b] += g[a][c] * g[b][d] * qu[c][d];
             }
 
-          // Calculate fake pressures
+          // Calculate fake pressure
           const CCTK_REAL press =
               param_a * (1 + 2 * param_a) /
               (64 * M_PI * pow(param_M, 2) *
@@ -177,25 +174,28 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
             for (int b = 0; b < 3; ++b)
               T[a][b] = 1.0 / 3.0 * press * q[a][b];
 
-          // Ensure that the constraints hold
-          // McLachlan says:
-          //   rho   ~ T00 - 2 beta[ua] T0[la] + beta[ua] beta[ub] T[la,lb]
-          //   S[la] ~ T0[la] - beta[ub] T[la,lb]
-          // If rho and S_a are zero, then the constraints will hold.
+          // // Ensure that the constraints hold
+          // // McLachlan says:
+          // //   rho   ~ T00 - 2 beta[ua] T0[la] + beta[ua] beta[ub] T[la,lb]
+          // //   S[la] ~ T0[la] - beta[ub] T[la,lb]
+          // // If rho and S_a are zero, then the constraints will hold.
+          //
+          // const CCTK_REAL beta[3] = {betax[ijk], betay[ijk], betaz[ijk]};
+          //
+          // CCTK_REAL Tt[3];
+          // for (int a = 0; a < 3; ++a) {
+          //   Tt[a] = 0;
+          //   for (int b = 0; b < 3; ++b)
+          //     Tt[a] += beta[b] * T[a][b];
+          // }
+          // CCTK_REAL Ttt;
+          // Ttt = 0;
+          // for (int a = 0; a < 3; ++a)
+          //   for (int b = 0; b < 3; ++b)
+          //     Ttt += 2 * beta[a] * Tt[a] - beta[a] * beta[b] * T[a][b];
 
-          const CCTK_REAL beta[3] = {betax[ijk], betay[ijk], betaz[ijk]};
-
-          CCTK_REAL Tt[3];
-          for (int a = 0; a < 3; ++a) {
-            Tt[a] = 0;
-            for (int b = 0; b < 3; ++b)
-              Tt[a] += beta[b] * T[a][b];
-          }
-          CCTK_REAL Ttt;
-          Ttt = 0;
-          for (int a = 0; a < 3; ++a)
-            for (int b = 0; b < 3; ++b)
-              Ttt += 2 * beta[a] * Tt[a] - beta[a] * beta[b] * T[a][b];
+          const CCTK_REAL Ttt = 0;
+          const CCTK_REAL Tt[3] = {0, 0, 0};
 
           eTtt[ijk] += Ttt;
           eTtx[ijk] += Tt[0];
