@@ -74,19 +74,19 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
           const CCTK_REAL xx[3] = {x[ijk], y[ijk], z[ijk]};
 
           // Projection from 3d onto surface:
-          //   theta in [0; pi]   (north to south)
+          //   theta in [0; pi]
           //   phi in [0; 2pi]
 
-          //   x =   r sin(theta) cos(phi)
-          //   y =   r sin(theta) sin(phi)
-          //   z = - r cos(theta)
+          //   x = r sin(theta) cos(phi)
+          //   y = r sin(theta) sin(phi)
+          //   z = r cos(theta)
 
           //   rho^2 = x^2 + y^2
-          //   - rho / z = tan(theta)
-          //   theta = atan (- rho / z) = atan2(-rho, z)
+          //   rho / z = tan(theta)
+          //   theta = atan (rho / z) = atan2(z, rho)
 
-          //   y / x = tan(phi)
-          //   phi = atan(y / x) = atan2(y, x)
+          //   x / y = tan(phi)
+          //   phi = atan(x / y) = atan2(y, x)
 
           // Project onto horizon
 
@@ -96,9 +96,11 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
 
           const CCTK_REAL radius =
               sqrt(pow(dx[0], 2) + pow(dx[1], 2) + pow(dx[2], 2));
-          const CCTK_REAL rho = sqrt(pow(dx[0], 2) + pow(dx[1], 2));
-          const CCTK_REAL theta = atan2(-rho, dx[2]);
-          const CCTK_REAL phi = atan2(dx[1], dx[0]);
+          const CCTK_REAL rho = hypot(dx[0], dx[1]);
+          const CCTK_REAL theta = atan2(rho, -dx[2]);
+          assert(theta >= 0 && theta <= M_PI);
+          const CCTK_REAL phi = fmod(atan2(dx[1], dx[0]) + 2 * M_PI, 2 * M_PI);
+          assert(phi >= 0 && phi < 2 * M_PI);
 
           // Find radius
           // Find nearest grid point on surface
