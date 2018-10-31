@@ -68,7 +68,7 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
       for (int i = 0; i < cctk_lsh[0]; ++i) {
         int ijk = CCTK_GFINDEX3D(cctkGH, i, j, k);
         // Are we inside the constant expansion surface?
-        if (smask[ijk] > 0) {
+        if (smask[ijk] < 1) {
 
           // Current point
           const CCTK_REAL xx[3] = {x[ijk], y[ijk], z[ijk]};
