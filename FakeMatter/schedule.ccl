@@ -1,8 +1,8 @@
 # Schedule definitions for thorn FakeMatter
 
-if (0 == 1) {
-  STORAGE: smask
+STORAGE: smask
 
+if (0 == 1) {
   SCHEDULE FakeMatter_AddMatter IN SetTmunu
   {
     LANG: C
