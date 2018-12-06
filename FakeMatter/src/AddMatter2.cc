@@ -28,13 +28,18 @@ static void inverse(const CCTK_REAL (&g)[3][3], const CCTK_REAL detg,
   gu[1][2] = gu[2][1];
 }
 
-// Normalize a vector (to unit length)
-static void normalize(const CCTK_REAL (&g)[3][3], CCTK_REAL (&x)[3]) {
+// Length of a vector
+static CCTK_REAL length(const CCTK_REAL (&g)[3][3], const CCTK_REAL (&x)[3]) {
   CCTK_REAL len = 0;
   for (int a = 0; a < 3; ++a)
     for (int b = 0; b < 3; ++b)
       len += g[a][b] * x[a] * x[b];
   len = sqrt(len);
+  return len;
+}
+
+// Normalize a vector (to unit length)
+static void normalize(CCTK_REAL (&x)[3], CCTK_REAL len) {
   for (int a = 0; a < 3; ++a)
     x[a] /= len;
 }
@@ -147,7 +152,12 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
 
           // Find spacelike vector er^a orthoginal to the surface:
           CCTK_REAL er[3] = {dx[0], dx[1], dx[2]};
-          normalize(gu, er);
+          CCTK_REAL len = length(gu, er);
+          if (len >= 1.0e-10)
+            normalize(er, len);
+          else
+            for (int d = 0; d < 3; ++d)
+              er[d] = 0.0;
 
           // Calculate surface two-metric q_ab
           //   qu^ab = gu^ab - er^a er^b
