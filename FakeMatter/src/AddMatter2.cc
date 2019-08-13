@@ -173,18 +173,28 @@ extern "C" void FakeMatter_AddMatter2(CCTK_ARGUMENTS) {
                 for (int d = 0; d < 3; ++d)
                   q[a][b] += g[a][c] * g[b][d] * qu[c][d];
             }
+            CCTK_REAL erd[3];
+          for (int a = 0; a < 3; ++a){
+              erd[a] = 0;
+              for (int c = 0; c < 3; ++c)
+                  erd[a] += g[a][c] * er[c];
+            }
 
           // Calculate fake pressure
           const CCTK_REAL press =
               param_a * (1 + 2 * param_a) /
               (64 * M_PI * pow(param_M, 2) *
                pow(param_a + pow(param_M, 2) * pow(expansion, 2), 2));
+          const CCTK_REAL pressr = -
+              param_a  /
+              (32 * M_PI * pow(param_M, 2) *
+               (param_a + pow(param_M, 2) * pow(expansion, 2)));
 
           // Define fake T_ab
           CCTK_REAL T[3][3];
           for (int a = 0; a < 3; ++a)
             for (int b = 0; b < 3; ++b)
-              T[a][b] = 1.0 / 3.0 * press * q[a][b];
+              T[a][b] =  press * q[a][b] + pressr * erd[a] * erd[b] ;
 
           // // Ensure that the constraints hold
           // // McLachlan says:
